@@ -1,0 +1,62 @@
+# Build output
+target/
+build/
+out/
+
+# Maven Wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+
+# IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Eclipse / STS
+.classpath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+# Java
+*.class
+*.log
+hs_err_pid*
+
+# Spring Boot
+*.jar
+*.war
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# Environment and secrets
+.env
+.env.*
+application-local.properties
+application-dev.properties
+application-prod.properties
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Test reports
+coverage/
+jacoco.exec
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*~
