@@ -32,6 +32,11 @@ public class Task {
     @Column(nullable = false)
     private TaskStatus status = TaskStatus.TODO;
 
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    @Column(nullable = false)
+    private TaskPriority priority = TaskPriority.MEDIUM;
+
     private LocalDate dueDate;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

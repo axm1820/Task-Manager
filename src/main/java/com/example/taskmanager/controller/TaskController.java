@@ -1,8 +1,12 @@
 package com.example.taskmanager.controller;
 
 import com.example.taskmanager.dto.TaskDtos.CreateTaskRequest;
+import com.example.taskmanager.dto.TaskDtos.AssignTaskRequest;
 import com.example.taskmanager.dto.TaskDtos.TaskResponse;
+import com.example.taskmanager.dto.TaskDtos.UpdateTaskRequest;
 import com.example.taskmanager.dto.TaskDtos.UpdateTaskStatusRequest;
+import com.example.taskmanager.entity.TaskPriority;
+import com.example.taskmanager.entity.TaskStatus;
 import com.example.taskmanager.entity.User;
 import com.example.taskmanager.service.TaskService;
 import jakarta.validation.Valid;
@@ -33,8 +37,22 @@ public class TaskController {
     public ResponseEntity<Page<TaskResponse>> listTasks(
             @PathVariable Long projectId,
             @AuthenticationPrincipal User currentUser,
+            @RequestParam(required = false) TaskStatus status,
+            @RequestParam(required = false) TaskPriority priority,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(
+                    iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate dueBefore,
             Pageable pageable) {
-        return ResponseEntity.ok(taskService.listTasks(projectId, currentUser, pageable));
+        return ResponseEntity.ok(taskService.listTasks(
+                projectId, currentUser, status, priority, dueBefore, pageable));
+    }
+
+    @PatchMapping("/{taskId}")
+    public ResponseEntity<TaskResponse> updateTask(
+            @PathVariable Long projectId,
+            @PathVariable Long taskId,
+            @RequestBody UpdateTaskRequest request,
+            @AuthenticationPrincipal User currentUser) {
+        return ResponseEntity.ok(taskService.updateTask(projectId, taskId, request, currentUser));
     }
 
     @PatchMapping("/{taskId}/status")
@@ -44,6 +62,16 @@ public class TaskController {
             @RequestBody UpdateTaskStatusRequest request,
             @AuthenticationPrincipal User currentUser) {
         return ResponseEntity.ok(taskService.updateStatus(projectId, taskId, request, currentUser));
+    }
+
+    @PatchMapping("/{taskId}/assignee")
+    public ResponseEntity<TaskResponse> assignTask(
+            @PathVariable Long projectId,
+            @PathVariable Long taskId,
+            @RequestBody AssignTaskRequest request,
+            @AuthenticationPrincipal User currentUser) {
+        return ResponseEntity.ok(taskService.assignTask(
+                projectId, taskId, request, currentUser));
     }
 
     @DeleteMapping("/{taskId}")

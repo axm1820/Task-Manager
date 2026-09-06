@@ -72,7 +72,9 @@ export JWT_SECRET=some-long-random-string-at-least-256-bits
 | DELETE | `/api/projects/{id}`                       | Owner/Admin | Delete a project              |
 | POST   | `/api/projects/{id}/tasks`                 | Owner/Admin | Create a task                 |
 | GET    | `/api/projects/{id}/tasks`                 | Owner/Admin | List tasks (paged)            |
+| PATCH  | `/api/projects/{id}/tasks/{taskId}`        | Owner/Admin | Update task details and priority |
 | PATCH  | `/api/projects/{id}/tasks/{taskId}/status` | Owner/Admin | Update task status            |
+| PATCH  | `/api/projects/{id}/tasks/{taskId}/assignee` | Owner/Admin | Assign or unassign a task |
 | DELETE | `/api/projects/{id}/tasks/{taskId}`        | Owner/Admin | Delete a task                 |
 
 ### Example: register + create a project
@@ -89,6 +91,22 @@ curl -X POST localhost:8080/api/projects \
   -H "Content-Type: application/json" \
   -d '{"name":"Portfolio Site","description":"Personal site rebuild"}'
 ```
+
+Tasks support `TODO`, `IN_PROGRESS`, and `DONE` statuses, plus `LOW`, `MEDIUM`, and
+`HIGH` priorities and optional due dates. Filter tasks with query parameters such as
+`?status=TODO&priority=HIGH&dueBefore=2026-09-10`; pagination and Spring's usual
+`sort` parameters remain supported.
+
+Assign a task to a registered user:
+
+```bash
+curl -X PATCH localhost:8080/api/projects/1/tasks/10/assignee \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"assigneeId":2}'
+```
+
+Send `{"assigneeId":null}` to unassign it. Assigning an unknown user returns `404`.
 
 ## Roadmap
 
